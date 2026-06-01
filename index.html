@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATALAYA — Inteligencia geoespacial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4f3ef;
+  --ink:#0b0b0b;
+  --ink-2:#3a3a38;
+  --ink-3:#6f6f6a;
+  --hair:rgba(11,11,11,.14);
+  --hair-soft:rgba(11,11,11,.07);
+  --paper-on-dark:#f4f3ef;
+  --dim-on-dark:#8c8c86;
+  --hair-on-dark:rgba(244,243,239,.16);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:'Archivo',sans-serif;line-height:1.55;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+.wrap{max-width:1300px;margin:0 auto;padding:0 32px}
+.mono{font-family:'DM Mono',monospace}
+.eyebrow{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--ink-3)}
+a{color:inherit;text-decoration:none}
+
+/* ---------- TOP STRIP ---------- */
+.topbar{border-bottom:1px solid var(--hair);font-family:'DM Mono';font-size:11px;letter-spacing:1px;color:var(--ink-3)}
+.topbar .wrap{display:flex;justify-content:space-between;align-items:center;height:34px;text-transform:uppercase}
+.topbar .live{display:flex;align-items:center;gap:8px}
+.topbar .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ink);animation:blink 2s infinite}
+@keyframes blink{50%{opacity:.25}}
+
+/* ---------- NAV ---------- */
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--ink)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:78px}
+.logo{display:flex;align-items:center;gap:13px;font-weight:900;font-size:25px;letter-spacing:4px}
+.logo svg{width:30px;height:30px}
+.nav-links{display:flex;gap:34px;font-family:'DM Mono';font-size:13px;letter-spacing:.5px}
+.nav-links a{position:relative;padding:4px 0;transition:opacity .2s}
+.nav-links a:hover{opacity:.5}
+.nav-cta{font-family:'DM Mono';font-size:12px;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--ink);padding:11px 20px;transition:all .2s}
+.nav-cta:hover{background:var(--ink);color:var(--paper)}
+@media(max-width:900px){.nav-links{display:none}}
+
+/* ---------- HERO (dark) ---------- */
+.hero{background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;min-height:560px}
+.hero-left{padding:80px 56px 70px;padding-left:max(32px,calc((100vw - 1300px)/2 + 32px));display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--hair-on-dark)}
+.hero-copy{max-width:640px}
+.hero .eyebrow{color:var(--dim-on-dark)}
+.hero h1{font-weight:900;font-size:clamp(40px,7vw,94px);line-height:.92;letter-spacing:-2px;text-transform:uppercase;margin:22px 0 26px;color:#fff}
+.hero h1 .thin{font-weight:400;letter-spacing:-1px;color:var(--dim-on-dark)}
+.hero p.lead{font-size:clamp(15.5px,1.6vw,19px);color:#cdccc6;max-width:520px;margin-bottom:36px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn{font-family:'DM Mono';font-size:13px;letter-spacing:1px;text-transform:uppercase;padding:14px 26px;border:1px solid var(--ink);transition:all .2s;cursor:pointer;display:inline-block;text-align:center}
+.btn-fill{background:var(--ink);color:var(--paper)}
+.btn-fill:hover{background:transparent;color:var(--ink)}
+.btn-line:hover{background:var(--ink);color:var(--paper)}
+/* hero buttons inverted on dark */
+.hero .btn{border-color:var(--paper)}
+.hero .btn-fill{background:var(--paper);color:var(--ink)}
+.hero .btn-fill:hover{background:transparent;color:var(--paper)}
+.hero .btn-line{color:var(--paper)}
+.hero .btn-line:hover{background:var(--paper);color:var(--ink)}
+/* hero right: orbit visual */
+.hero-right{position:relative;background:var(--ink);overflow:hidden;border-left:1px solid var(--hair-on-dark)}
+.hero-right svg{position:absolute;inset:0;width:100%;height:100%}
+.hero-right svg [stroke]{stroke:var(--paper)}
+.hero-right svg [fill]:not([fill="none"]){fill:var(--paper)}
+.orbit-dot{transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.contour{position:absolute;inset:0;opacity:.6;
+  background-image:repeating-radial-gradient(circle at 60% 45%,transparent 0 38px,rgba(244,243,239,.06) 38px 39px);}
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-left{border-right:none;padding:60px 24px 50px}
+  .hero-right{min-height:260px;border-left:none;border-top:1px solid var(--hair-on-dark)}
+}
+@media(max-width:560px){
+  .hero-left{padding:44px 20px 44px}
+  .hero h1{font-size:clamp(34px,12vw,52px);letter-spacing:-1px;margin:18px 0 22px}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .hero .btn{width:100%}
+}
+
+/* countdown strip */
+.tminus{border-top:1px solid var(--hair-on-dark);border-bottom:1px solid var(--ink);background:var(--ink);color:var(--paper)}
+.tminus .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;padding:18px 32px}
+.tminus .label{font-family:'DM Mono';font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim-on-dark);max-width:340px}
+.tminus .clock{font-family:'DM Mono';font-size:clamp(22px,3vw,34px);letter-spacing:2px;font-weight:500}
+.tminus .clock small{font-size:12px;color:var(--dim-on-dark);letter-spacing:1px}
+
+/* ---------- SECTIONS ---------- */
+section{border-bottom:1px solid var(--ink)}
+.pad{padding:96px 0}
+.sec-head{display:grid;grid-template-columns:280px 1fr;gap:40px;margin-bottom:56px}
+.sec-head .num{font-family:'DM Mono';font-size:13px;letter-spacing:1px;color:var(--ink-3)}
+.sec-head h2{font-weight:800;font-size:clamp(30px,4.2vw,52px);line-height:1;letter-spacing:-1px;text-transform:uppercase}
+.sec-head p{color:var(--ink-2);font-size:16px;max-width:540px;margin-top:18px}
+@media(max-width:780px){.sec-head{grid-template-columns:1fr;gap:14px}}
+
+/* wedge / focus */
+.focus{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--hair)}
+.focus .col{padding:44px 40px}
+.focus .col:first-child{border-right:1px solid var(--hair)}
+.focus h3{font-weight:800;font-size:26px;text-transform:uppercase;letter-spacing:-.5px;margin-bottom:16px}
+.focus p{color:var(--ink-2);font-size:15.5px;margin-bottom:14px}
+.focus ul{list-style:none;font-family:'DM Mono';font-size:13px;color:var(--ink-2)}
+.focus li{padding:10px 0;border-bottom:1px dashed var(--hair);display:flex;gap:12px}
+.focus li::before{content:"▸";color:var(--ink)}
+@media(max-width:780px){.focus{grid-template-columns:1fr}.focus .col:first-child{border-right:none;border-bottom:1px solid var(--hair)}}
+
+/* ---------- DARK OPS ---------- */
+.ops{background:var(--ink);color:var(--paper-on-dark);border-bottom:1px solid var(--ink)}
+.ops .sec-head h2{color:var(--paper-on-dark)}
+.ops .sec-head .num,.ops .sec-head p{color:var(--dim-on-dark)}
+.ops-frame{border:1px solid var(--hair-on-dark);display:grid;grid-template-columns:1.6fr 1fr}
+.ops-map{position:relative;height:440px;border-right:1px solid var(--hair-on-dark);overflow:hidden}
+.ops-map .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(244,243,239,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(244,243,239,.05) 1px,transparent 1px);background-size:44px 44px}
+.ops-map svg{position:absolute;inset:0;width:100%;height:100%}
+.ops-sweep{position:absolute;top:50%;left:50%;width:200%;height:200%;transform:translate(-50%,-50%);
+  background:conic-gradient(from 0deg,rgba(244,243,239,.10),transparent 22%);animation:spin 9s linear infinite;mix-blend-mode:screen}
+.det{position:absolute;width:8px;height:8px;margin:-4px;border-radius:50%;background:var(--paper-on-dark);z-index:5}
+.det::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:1px solid var(--paper-on-dark);animation:ring 2s ease-out infinite;opacity:0}
+@keyframes ring{0%{transform:scale(.5);opacity:.8}100%{transform:scale(2.6);opacity:0}}
+.ops-map .hud{position:absolute;bottom:14px;left:16px;font-family:'DM Mono';font-size:11px;color:var(--dim-on-dark);letter-spacing:.5px}
+.ops-map .ch{position:absolute;top:14px;right:16px;font-family:'DM Mono';font-size:11px;color:var(--dim-on-dark);text-align:right;line-height:1.7}
+.ops-side{display:flex;flex-direction:column}
+.ops-kpis{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--hair-on-dark)}
+.ops-kpi{padding:18px;border-right:1px solid var(--hair-on-dark);border-bottom:1px solid var(--hair-on-dark)}
+.ops-kpi:nth-child(2n){border-right:none}.ops-kpi:nth-child(n+3){border-bottom:none}
+.ops-kpi .n{font-weight:800;font-size:30px;line-height:1}
+.ops-kpi .l{font-family:'DM Mono';font-size:10.5px;color:var(--dim-on-dark);margin-top:6px;letter-spacing:.5px}
+.ops-feed{flex:1;padding:16px 0}
+.ops-feed .h{font-family:'DM Mono';font-size:11px;letter-spacing:1.5px;color:var(--dim-on-dark);padding:0 18px 10px;text-transform:uppercase}
+.ops-feed .list{font-family:'DM Mono';font-size:11px;height:200px;overflow:hidden;padding:0 18px}
+.frow{display:flex;gap:10px;padding:6px 0;border-bottom:1px dashed var(--hair-on-dark);animation:slide .4s ease}
+@keyframes slide{from{opacity:0;transform:translateY(-5px)}to{opacity:1}}
+.frow .t{color:var(--dim-on-dark)}.frow .c{margin-left:auto;color:var(--dim-on-dark)}
+@media(max-width:840px){.ops-frame{grid-template-columns:1fr}.ops-map{border-right:none;border-bottom:1px solid var(--hair-on-dark)}}
+
+/* ---------- ROADMAP ---------- */
+.road{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--hair)}
+.rcell{padding:36px 30px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.rcell:nth-child(3n){border-right:none}
+.rcell .ph{font-family:'DM Mono';font-size:11px;letter-spacing:1px;color:var(--ink-3);margin-bottom:18px;display:flex;justify-content:space-between}
+.rcell h4{font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:-.3px;margin-bottom:9px}
+.rcell p{color:var(--ink-2);font-size:14px}
+.rcell.live h4::after{content:" ●";color:var(--ink);font-size:11px;vertical-align:middle}
+@media(max-width:840px){.road{grid-template-columns:1fr}.rcell{border-right:none}}
+
+/* ---------- PIPELINE ---------- */
+.pipe{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--hair)}
+.pcell{padding:34px 26px;border-right:1px solid var(--hair)}
+.pcell:last-child{border-right:none}
+.pcell .pn{font-family:'DM Mono';font-size:34px;font-weight:500;letter-spacing:-1px}
+.pcell h4{font-weight:700;font-size:17px;text-transform:uppercase;margin:16px 0 8px}
+.pcell p{color:var(--ink-2);font-size:13.5px}
+@media(max-width:840px){.pipe{grid-template-columns:1fr 1fr}.pcell:nth-child(2n){border-right:none}}
+
+/* ---------- CTA ---------- */
+.cta{text-align:center;padding:120px 0}
+.cta .eyebrow{margin-bottom:24px}
+.cta h2{font-weight:900;font-size:clamp(38px,6.5vw,84px);line-height:.92;text-transform:uppercase;letter-spacing:-2px;margin-bottom:24px}
+.cta p{color:var(--ink-2);max-width:500px;margin:0 auto 36px;font-size:17px}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--ink);color:var(--dim-on-dark)}
+.foot-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px;padding:64px 0;border-bottom:1px solid var(--hair-on-dark)}
+.foot-top .logo{color:var(--paper-on-dark);margin-bottom:18px}
+.foot-top h5{font-family:'DM Mono';font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--paper-on-dark);margin-bottom:16px}
+.foot-top a{display:block;font-family:'DM Mono';font-size:13px;padding:5px 0;transition:color .2s}
+.foot-top a:hover{color:var(--paper-on-dark)}
+.foot-top p{font-size:13.5px;max-width:320px}
+.foot-bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:24px 0;font-family:'DM Mono';font-size:11px;letter-spacing:.5px}
+.disclaimer{padding:0 0 30px;font-family:'DM Mono';font-size:10.5px;color:#555;letter-spacing:.3px;max-width:760px}
+@media(max-width:780px){.foot-top{grid-template-columns:1fr}}
+
+/* ---------- GLOBAL MOBILE ---------- */
+@media(max-width:680px){
+  .wrap{padding:0 20px}
+  .pad{padding:60px 0}
+  .nav-inner{height:64px}
+  .logo{font-size:21px;letter-spacing:3px}
+  .nav-cta{padding:9px 14px;font-size:11px}
+  .topbar .wrap{height:30px}
+  .topbar .live,.topbar #utc{font-size:10px}
+  .tminus .wrap{padding:16px 20px;gap:10px}
+  .tminus .label{font-size:11px;letter-spacing:1px}
+  .sec-head{margin-bottom:36px}
+  .focus .col{padding:30px 20px}
+  .ops-map{height:320px}
+  .ops-kpi{padding:14px}
+  .ops-kpi .n{font-size:24px}
+  .rcell,.pcell{padding:26px 20px}
+  .cta{padding:74px 0}
+  .foot-top{padding:48px 0}
+}
+@media(max-width:420px){
+  .ops-feed .list .frow{flex-wrap:wrap;gap:4px}
+  .ops-feed .list .frow .c{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP STRIP -->
+<div class="topbar"><div class="wrap">
+  <span class="live">CONSTELACIÓN OPERATIVA · CONO SUR</span>
+  <span id="utc">--:-- UTC</span>
+</div></div>
+
+<!-- NAV -->
+<nav><div class="wrap nav-inner">
+  <a href="#" class="logo">
+    <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.4">
+      <circle cx="15" cy="15" r="3.4"/><circle cx="15" cy="15" r="11" stroke-dasharray="2 3"/>
+      <path d="M15 1.6v3M15 25.4v3M1.6 15h3M25.4 15h3"/>
+    </svg>
+    ATALAYA
+  </a>
+  <div class="nav-links">
+    <a href="#programa">Programa</a>
+    <a href="#ops">Operaciones</a>
+    <a href="#roadmap">Misión</a>
+    <a href="#tecnologia">Tecnología</a>
+  </div>
+  <a href="#contacto" class="nav-cta">Solicitar acceso</a>
+</div></nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-grid">
+    <div class="hero-left"><div class="hero-copy">
+      <span class="eyebrow">Inteligencia geoespacial · Gobierno &amp; Agroexportación</span>
+      <h1>Vemos el<br><span class="thin">territorio</span><br>desde la órbita.</h1>
+      <p class="lead">ATALAYA convierte datos satelitales en evidencia accionable a nivel parcela. Empezamos por lo que el Cono Sur necesita hoy: probar que cada hectárea exportada está libre de deforestación.</p>
+      <div class="hero-actions">
+        <a href="#ops" class="btn btn-fill">Ver operaciones ▸</a>
+        <a href="#programa" class="btn btn-line">El programa</a>
+      </div>
+    </div></div>
+    <div class="hero-right">
+      <div class="contour"></div>
+      <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+        <g stroke="var(--ink)" fill="none" stroke-width="1">
+          <circle cx="230" cy="180" r="78" opacity=".9"/>
+          <ellipse cx="230" cy="180" rx="150" ry="58" opacity=".4"/>
+          <ellipse cx="230" cy="180" rx="120" ry="120" opacity=".25" stroke-dasharray="2 4"/>
+          <line x1="230" y1="60" x2="230" y2="300" opacity=".15"/>
+          <line x1="100" y1="180" x2="360" y2="180" opacity=".15"/>
+          <!-- meridians -->
+          <ellipse cx="230" cy="180" rx="30" ry="78" opacity=".5"/>
+          <ellipse cx="230" cy="180" rx="56" ry="78" opacity=".35"/>
+        </g>
+        <g class="orbit-dot" style="animation:spin 14s linear infinite;transform-origin:230px 180px">
+          <circle cx="380" cy="180" r="4" fill="var(--ink)"/>
+          <rect x="372" y="176" width="16" height="8" fill="none" stroke="var(--ink)" stroke-width="1"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- T-MINUS -->
+<div class="tminus"><div class="wrap">
+  <div class="label">T– al cumplimiento obligatorio del Reglamento Europeo de Deforestación (EUDR) · 30 DIC 2026</div>
+  <div class="clock" id="countdown">T– <small>cargando</small></div>
+</div></div>
+
+<!-- PROGRAMA / WEDGE -->
+<section id="programa"><div class="wrap pad">
+  <div class="sec-head">
+    <div class="num">[ 01 ] PROGRAMA DE ENTRADA</div>
+    <div>
+      <h2>Cadenas libres de deforestación</h2>
+      <p>No empezamos haciendo todo. Empezamos resolviendo el problema con reloj: a partir del 30 de diciembre de 2026, exportar soja, carne o madera a Europa exige prueba de origen libre de deforestación, parcela por parcela.</p>
+    </div>
+  </div>
+  <div class="focus">
+    <div class="col">
+      <h3>Para el Estado</h3>
+      <p>Infraestructura nacional de verificación geoespacial. Para que los exportadores del país no queden fuera del mercado europeo y para fiscalizar con evidencia, no con estimaciones.</p>
+      <ul>
+        <li>Detección de cambio de cobertura a escala parcela</li>
+        <li>Cadena de evidencia auditable y pericial</li>
+        <li>Despliegue soberano, dato dentro de jurisdicción</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>Para el agroexportador</h3>
+      <p>Certificación lista para due diligence europea. Cada lote con su historial satelital, georreferenciado y firmado, exportable a los sistemas de cumplimiento del comprador.</p>
+      <ul>
+        <li>Polígonos de finca validados contra histórico 2020+</li>
+        <li>Reporte de riesgo por lote en minutos</li>
+        <li>Integración vía API o exportación de declaración</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- DARK OPS -->
+<section id="ops" class="ops"><div class="wrap pad">
+  <div class="sec-head">
+    <div class="num">[ 02 ] CENTRO DE OPERACIONES</div>
+    <div>
+      <h2>Vista en vivo</h2>
+      <p>Una simulación de lo que ve el analista: barrido satelital sobre una región, detecciones de cambio y métricas de misión en tiempo casi real.</p>
+    </div>
+  </div>
+  <div class="ops-frame">
+    <div class="ops-map" id="map">
+      <div class="grid"></div>
+      <svg viewBox="0 0 600 440" preserveAspectRatio="none">
+        <polygon points="250,70 330,62 360,130 408,170 378,250 300,320 228,300 188,220 168,140"
+          fill="rgba(244,243,239,.03)" stroke="rgba(244,243,239,.45)" stroke-width="1.1" stroke-dasharray="4 4"/>
+      </svg>
+      <div class="ops-sweep"></div>
+      <div class="ch">REGIÓN-04 · ÓPTICO + SAR<br>ACIMUT 142° · ELEV 38°<br>VENTANA 06:00–06:11 UTC</div>
+      <div class="hud">OBJETIVO <span id="coord">-25.30, -57.63</span> · ZOOM 11</div>
+    </div>
+    <div class="ops-side">
+      <div class="ops-kpis">
+        <div class="ops-kpi"><div class="n" id="k-sat">12</div><div class="l">SATÉLITES ACTIVOS</div></div>
+        <div class="ops-kpi"><div class="n" id="k-area">406.800</div><div class="l">KM² MONITOREADOS</div></div>
+        <div class="ops-kpi"><div class="n" id="k-det">1.847</div><div class="l">DETECCIONES / 24 H</div></div>
+        <div class="ops-kpi"><div class="n" id="k-lat">11</div><div class="l">LATENCIA · MIN</div></div>
+      </div>
+      <div class="ops-feed">
+        <div class="h">▸ Feed de detecciones</div>
+        <div class="list" id="feed"></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ROADMAP -->
+<section id="roadmap"><div class="wrap pad">
+  <div class="sec-head">
+    <div class="num">[ 03 ] HOJA DE MISIÓN</div>
+    <div>
+      <h2>De un ojo a una plataforma</h2>
+      <p>La verificación de deforestación nos da el pipeline satelital, los datos y la relación institucional. Desde ahí, cada nueva capacidad reusa la misma infraestructura.</p>
+    </div>
+  </div>
+  <div class="road">
+    <div class="rcell live"><div class="ph"><span>FASE 01</span><span>EN CURSO</span></div><h4>Deforestación</h4><p>Verificación de cadenas y fiscalización ambiental. El producto que se vende solo con el EUDR.</p></div>
+    <div class="rcell"><div class="ph"><span>FASE 02</span><span>2027</span></div><h4>Agricultura</h4><p>Índices de vegetación y humedad, estimación de cosecha y alerta temprana de sequía.</p></div>
+    <div class="rcell"><div class="ph"><span>FASE 02</span><span>2027</span></div><h4>Desastres</h4><p>Mapas de inundación e incendio en horas para defensa civil sobre cartografía del evento.</p></div>
+    <div class="rcell"><div class="ph"><span>FASE 03</span><span>2028</span></div><h4>Fronteras &amp; marítimo</h4><p>Fusión de imagen y RF para rastrear pistas clandestinas y embarcaciones sin AIS.</p></div>
+    <div class="rcell"><div class="ph"><span>FASE 03</span><span>2028</span></div><h4>Infraestructura</h4><p>Monitoreo de represas, rutas y puertos. Detección de obra y asentamiento no autorizado.</p></div>
+    <div class="rcell"><div class="ph"><span>FASE 04</span><span>VISIÓN</span></div><h4>Dominio espacial</h4><p>Catálogo de objetos en órbita y conjunciones. Conciencia situacional de activos nacionales.</p></div>
+  </div>
+</div></section>
+
+<!-- PIPELINE -->
+<section id="tecnologia"><div class="wrap pad">
+  <div class="sec-head">
+    <div class="num">[ 04 ] ARQUITECTURA</div>
+    <div>
+      <h2>De la órbita a la decisión</h2>
+      <p>No entregamos imágenes bonitas: entregamos respuestas, con trazabilidad de extremo a extremo.</p>
+    </div>
+  </div>
+  <div class="pipe">
+    <div class="pcell"><div class="pn">01</div><h4>Ingesta</h4><p>Óptico, SAR de banda-X y captación RF. Cadencia de revisita configurable por teatro.</p></div>
+    <div class="pcell"><div class="pn">02</div><h4>Proceso</h4><p>Ortorrectificación, fusión y alineación temporal. Cada píxel georreferenciado y firmado.</p></div>
+    <div class="pcell"><div class="pn">03</div><h4>Detección</h4><p>Modelos de cambio que separan señal de ruido y puntúan cada evento por confianza.</p></div>
+    <div class="pcell"><div class="pn">04</div><h4>Entrega</h4><p>Alertas, capas GIS y reportes al puesto de mando, vía API o despliegue on-premise.</p></div>
+  </div>
+</div></section>
+
+<!-- CTA -->
+<section id="contacto"><div class="wrap cta">
+  <div class="eyebrow">Programa de acceso temprano</div>
+  <h2>Pongamos ojos<br>en la órbita.</h2>
+  <p>Trabajamos con ministerios, agencias ambientales y exportadores para desplegar capacidad geoespacial soberana antes del reloj europeo.</p>
+  <a href="#" class="btn btn-fill" style="padding:16px 34px">Solicitar sesión técnica ▸</a>
+</div></section>
+
+<!-- FOOTER -->
+<footer><div class="wrap">
+  <div class="foot-top">
+    <div>
+      <div class="logo">
+        <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="15" cy="15" r="3.4"/><circle cx="15" cy="15" r="11" stroke-dasharray="2 3"/><path d="M15 1.6v3M15 25.4v3M1.6 15h3M25.4 15h3"/></svg>
+        ATALAYA
+      </div>
+      <p>Inteligencia geoespacial soberana para el Cono Sur. Vemos el territorio desde la órbita para que las decisiones de Estado se tomen con evidencia.</p>
+    </div>
+    <div>
+      <h5>Plataforma</h5>
+      <a href="#programa">Programa</a><a href="#ops">Operaciones</a><a href="#roadmap">Misión</a><a href="#tecnologia">Tecnología</a>
+    </div>
+    <div>
+      <h5>Contacto</h5>
+      <a href="#">contacto@atalaya.space</a><a href="#">Prensa</a><a href="#">Alianzas institucionales</a>
+    </div>
+  </div>
+  <div class="foot-bot">
+    <span>ATALAYA · CONO SUR · 2026</span>
+    <span>EST. ÓRBITA BAJA · LAT -25.26 / LON -57.57</span>
+  </div>
+  <div class="disclaimer">Demo conceptual. ATALAYA es una marca y producto ficticios creados con fines de diseño y prototipado. Las métricas, detecciones y la constelación son simuladas.</div>
+</div></footer>
+
+<script>
+/* UTC clock */
+function utc(){document.getElementById('utc').textContent=new Date().toUTCString().slice(17,22)+' UTC';}
+setInterval(utc,1000);utc();
+
+/* T-minus countdown to EUDR 30 Dec 2026 */
+const target=new Date('2026-12-30T00:00:00Z').getTime();
+function cd(){
+  let d=target-Date.now();if(d<0)d=0;
+  const D=Math.floor(d/864e5),H=Math.floor(d%864e5/36e5),M=Math.floor(d%36e5/6e4),S=Math.floor(d%6e4/1e3);
+  const p=n=>String(n).padStart(2,'0');
+  document.getElementById('countdown').innerHTML=`T– ${D}<small>D</small> ${p(H)}<small>H</small> ${p(M)}<small>M</small> ${p(S)}<small>S</small>`;
+}
+setInterval(cd,1000);cd();
+
+/* OPS live KPIs */
+let area=406800,det=1847,lat=11;
+const fmt=n=>n.toLocaleString('es');
+setInterval(()=>{
+  area+=Math.floor(Math.random()*40-10);if(Math.random()<.4)det++;
+  lat=Math.max(8,Math.min(14,lat+(Math.random()<.5?-1:1)));
+  document.getElementById('k-area').textContent=fmt(area);
+  document.getElementById('k-det').textContent=fmt(det);
+  document.getElementById('k-lat').textContent=lat;
+},2400);
+
+/* OPS detections (monochrome, restrained) */
+const tags=['DEFORESTACIÓN','CAMBIO SUELO','FOCO DE CALOR','MOVIMIENTO','PISTA NO REG.','EMBARCACIÓN'];
+const map=document.getElementById('map'),feed=document.getElementById('feed'),coord=document.getElementById('coord');
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function detect(){
+  const tag=tags[Math.floor(Math.random()*tags.length)];
+  const x=rnd(30,64),y=rnd(20,66);
+  const la=(-rnd(24.5,26.2)).toFixed(2),lo=(-rnd(56.8,58.4)).toFixed(2),conf=Math.floor(rnd(78,99));
+  const dot=document.createElement('div');dot.className='det';dot.style.left=x+'%';dot.style.top=y+'%';
+  map.appendChild(dot);setTimeout(()=>dot.remove(),9000);
+  coord.textContent=la+', '+lo;
+  const row=document.createElement('div');row.className='frow';
+  row.innerHTML=`<span class="t">${new Date().toUTCString().slice(17,25)}</span><span>${tag}</span><span class="c">${la},${lo} · ${conf}%</span>`;
+  feed.prepend(row);while(feed.children.length>9)feed.lastChild.remove();
+}
+for(let i=0;i<5;i++)setTimeout(detect,i*220);
+setInterval(detect,2200);
+</script>
+</body>
+</html>
